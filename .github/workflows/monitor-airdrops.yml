@@ -1,0 +1,45 @@
+name: Monitor Airdrops
+
+on:
+  schedule:
+    # Run every 15 minutes
+    - cron: '*/15 * * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  monitor-clanker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Monitor Clanker Tokens
+        run: |
+          curl -X GET "${{ secrets.APP_URL }}/api/monitor/clanker" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json"
+          
+  monitor-degen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Monitor DEGEN Airdrops
+        run: |
+          curl -X GET "${{ secrets.APP_URL }}/api/monitor/degen" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json"
+          
+  monitor-power-badge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Monitor Power Badge Exclusives
+        run: |
+          curl -X GET "${{ secrets.APP_URL }}/api/monitor/power-badge" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json"
+          
+  monitor-all:
+    runs-on: ubuntu-latest
+    needs: [monitor-clanker, monitor-degen, monitor-power-badge]
+    steps:
+      - name: Run All Monitors
+        run: |
+          curl -X GET "${{ secrets.APP_URL }}/api/monitor/all" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json"
