@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Script from 'next/script'
+import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { Providers } from './providers'
 import { MiniAppProvider } from '@/components/MiniAppProvider'
@@ -71,6 +72,7 @@ export default function RootLayout({
             {children}
           </MiniAppProvider>
         </Providers>
+        <Analytics />
       </body>
     </html>
   )
