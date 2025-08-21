@@ -1,0 +1,25 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "miniApp": {
+    "homeUrl": "https://fardrops.xyz",
+    "iconUrl": "https://fardrops.xyz/icon.png",
+    "name": "FarDrops",
+    "splashImageUrl": "https://fardrops.xyz/splash.png",
+    "splashBackgroundColor": "#1a1a2e",
+    "description": "Never miss a Farcaster airdrop again. Track DEGEN, frame tokens, NFT drops and more.",
+    "category": "defi",
+    "screenshots": [
+      "https://fardrops.xyz/screenshot1.png",
+      "https://fardrops.xyz/screenshot2.png"
+    ],
+    "index": true,
+    "externalLink": {
+      "url": "https://fardrops.xyz",
+      "description": "Open in browser"
+    }
+  }
+}

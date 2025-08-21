@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --farcaster-purple: 138 99 210;
+    --base-blue: 0 82 255;
+  }
+}
+
+@layer utilities {
+  .text-farcaster-purple {
+    color: rgb(138 99 210);
+  }
+  
+  .bg-farcaster-purple {
+    background-color: rgb(138 99 210);
+  }
+  
+  .text-base-blue {
+    color: rgb(0 82 255);
+  }
+  
+  .bg-base-blue {
+    background-color: rgb(0 82 255);
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.7);
+}
