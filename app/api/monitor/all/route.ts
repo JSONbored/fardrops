@@ -8,6 +8,13 @@ const monitors = [
   { name: 'General', endpoint: '/api/monitor' }
 ]
 
+interface MonitorResult {
+  monitor: string
+  success: boolean
+  data?: any
+  error?: string
+}
+
 export async function GET(request: NextRequest) {
   try {
     // Auth check
@@ -20,11 +27,11 @@ export async function GET(request: NextRequest) {
 
     console.log('🚀 Running all airdrop monitors...')
     
-    const results = []
+    const results: MonitorResult[] = []
     const baseUrl = request.nextUrl.origin
 
     // Run all monitors in parallel
-    const monitorPromises = monitors.map(async (monitor) => {
+    const monitorPromises = monitors.map(async (monitor): Promise<MonitorResult> => {
       try {
         console.log(`Running ${monitor.name} monitor...`)
         
@@ -75,7 +82,7 @@ export async function GET(request: NextRequest) {
 
     // Calculate totals
     const totalAirdrops = results.reduce((sum, r) => {
-      if (r.success && r.data) {
+      if (r.success && 'data' in r && r.data) {
         return sum + (r.data.airdropsFound || r.data.tokensFound || 0)
       }
       return sum

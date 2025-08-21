@@ -4,9 +4,16 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { RefreshCw, CheckCircle, XCircle, Loader2 } from 'lucide-react'
 
+interface MonitorResult {
+  success: boolean
+  data?: any
+  error?: string
+  timestamp: string
+}
+
 export default function AdminPage() {
   const [loading, setLoading] = useState<string | null>(null)
-  const [results, setResults] = useState<any>({})
+  const [results, setResults] = useState<Record<string, MonitorResult>>({})
 
   const monitors = [
     { name: 'Clanker', endpoint: '/api/monitor/clanker', icon: '🤖' },
@@ -26,7 +33,7 @@ export default function AdminPage() {
       })
       
       const data = await response.json()
-      setResults(prev => ({
+      setResults((prev: Record<string, MonitorResult>) => ({
         ...prev,
         [monitor.name]: {
           success: response.ok,
@@ -35,7 +42,7 @@ export default function AdminPage() {
         }
       }))
     } catch (error) {
-      setResults(prev => ({
+      setResults((prev: Record<string, MonitorResult>) => ({
         ...prev,
         [monitor.name]: {
           success: false,
