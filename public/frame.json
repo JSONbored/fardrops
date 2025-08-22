@@ -1,0 +1,12 @@
+{
+  "version": "next",
+  "name": "FarDrops",
+  "icon": "rocket",
+  "description": "Never miss a Farcaster airdrop - track DEGEN, Clanker tokens, NFT drops and more",
+  "aboutUrl": "https://fardrops.xyz",
+  "homeUrl": "https://fardrops.xyz",
+  "imageUrl": "https://fardrops.xyz/og-image.png",
+  "splashImageUrl": "https://fardrops.xyz/splash.png",
+  "splashBackgroundColor": "#1e0b2e",
+  "webhookUrl": "https://fardrops.xyz/api/webhooks/farcaster"
+}

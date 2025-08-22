@@ -6,11 +6,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import AnimatedDashboard from '@/components/AnimatedDashboard'
-
-const ConnectWallet = dynamic(
-  () => import('@coinbase/onchainkit/wallet').then(mod => mod.ConnectWallet),
-  { ssr: false }
-)
+import { ConnectWallet } from '@/components/ConnectWallet'
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)

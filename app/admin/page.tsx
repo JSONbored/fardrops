@@ -28,7 +28,7 @@ export default function AdminPage() {
     try {
       const response = await fetch(monitor.endpoint, {
         headers: {
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET || 'development'}`,
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET}`,
         }
       })
       

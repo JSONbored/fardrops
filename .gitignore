@@ -91,3 +91,7 @@ CLAUDE.md
 ARCHITECTURE.md
 COMPREHENSIVE_KNOWLEDGE_MAP.md
 PERFORMANCE.md
+PRIVATE_MONITORING_SETUP.md
+private-monitor-template.yml
+LINEAR_PRIVATE_NOTES.md
+.github/workflows/linear-sync.yml.example

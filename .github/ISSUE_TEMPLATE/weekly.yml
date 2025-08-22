@@ -1,0 +1,24 @@
+name: Weekly Task
+description: Track weekly improvements
+title: "[Week]: "
+labels: ["weekly-task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Weekly tasks to boost Summer League ranking
+  - type: checkboxes
+    id: tasks
+    attributes:
+      label: This Week's Goals
+      options:
+        - label: Push at least 5 meaningful commits
+        - label: Merge at least 2 PRs
+        - label: Deploy at least 1 update
+        - label: Engage on Farcaster
+        - label: Track ranking change
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Any specific focus areas this week?

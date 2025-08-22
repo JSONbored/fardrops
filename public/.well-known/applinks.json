@@ -1,0 +1,25 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "com.farcaster.fardrops",
+        "paths": ["*"]
+      }
+    ]
+  },
+  "farcaster": {
+    "manifest": {
+      "version": "1.0.0",
+      "name": "FarDrops",
+      "description": "The first dedicated airdrop tracker for the Farcaster ecosystem",
+      "icon": "https://fardrops.xyz/icon.png",
+      "homeUrl": "https://fardrops.xyz",
+      "aboutUrl": "https://fardrops.xyz/about",
+      "developer": {
+        "name": "FarDrops Team",
+        "url": "https://fardrops.xyz"
+      }
+    }
+  }
+}

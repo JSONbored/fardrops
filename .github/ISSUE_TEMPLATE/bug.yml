@@ -1,0 +1,38 @@
+name: Bug Report
+description: Report a bug in FarDrops
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This will sync to Linear automatically
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: What went wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this?
+      value: |
+        1. Go to...
+        2. Click on...
+        3. See error
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Critical (app broken)
+        - High (feature broken)
+        - Medium (annoying)
+        - Low (cosmetic)
+    validations:
+      required: true

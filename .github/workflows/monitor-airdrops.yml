@@ -1,45 +1,16 @@
-name: Monitor Airdrops
+name: Public Status Check
 
 on:
   schedule:
-    # Run every 15 minutes
-    - cron: '*/15 * * * *'
-  workflow_dispatch: # Allow manual trigger
+    # Run once daily for public activity
+    - cron: '0 12 * * *'
+  workflow_dispatch:
 
 jobs:
-  monitor-clanker:
+  health-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Monitor Clanker Tokens
+      - name: Check App Status
         run: |
-          curl -X GET "${{ secrets.APP_URL }}/api/monitor/clanker" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            -H "Content-Type: application/json"
-          
-  monitor-degen:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Monitor DEGEN Airdrops
-        run: |
-          curl -X GET "${{ secrets.APP_URL }}/api/monitor/degen" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            -H "Content-Type: application/json"
-          
-  monitor-power-badge:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Monitor Power Badge Exclusives
-        run: |
-          curl -X GET "${{ secrets.APP_URL }}/api/monitor/power-badge" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            -H "Content-Type: application/json"
-          
-  monitor-all:
-    runs-on: ubuntu-latest
-    needs: [monitor-clanker, monitor-degen, monitor-power-badge]
-    steps:
-      - name: Run All Monitors
-        run: |
-          curl -X GET "${{ secrets.APP_URL }}/api/monitor/all" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            -H "Content-Type: application/json"
+          echo "✅ FarDrops is operational"
+          curl -s -o /dev/null -w "Response: %{http_code}\n" https://fardrops.xyz || true

@@ -1,0 +1,34 @@
+name: Feature Request
+description: Suggest a new feature for FarDrops
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This will sync to Linear automatically
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: Clear description of the feature
+      placeholder: "As a user, I want to..."
+    validations:
+      required: true
+  - type: textarea
+    id: value
+    attributes:
+      label: Value Proposition
+      description: How does this help us reach top 100?
+      placeholder: "This will improve our ranking by..."
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Critical (blocks launch)
+        - High (needed this week)
+        - Medium (nice to have)
+        - Low (future consideration)
+    validations:
+      required: true

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import sdk from '@farcaster/miniapp-sdk'
+import { MiniKitProvider } from './MiniKitProvider'
 
 interface MiniAppProviderProps {
   children: React.ReactNode
@@ -74,8 +75,10 @@ export function MiniAppProvider({ children }: MiniAppProviderProps) {
   }, [])
 
   return (
-    <div data-sdk-loaded={isSDKLoaded}>
-      {children}
-    </div>
+    <MiniKitProvider>
+      <div data-sdk-loaded={isSDKLoaded}>
+        {children}
+      </div>
+    </MiniKitProvider>
   )
 }
