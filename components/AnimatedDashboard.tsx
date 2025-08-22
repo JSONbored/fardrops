@@ -1,94 +1,107 @@
-'use client'
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion'
-import { Bell, TrendingUp, Gift, Sparkles, DollarSign, Clock, Check, AlertCircle, ArrowUp, ArrowDown } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Bell,
+  TrendingUp,
+  Gift,
+  Sparkles,
+  DollarSign,
+  Clock,
+  Check,
+  AlertCircle,
+  ArrowUp,
+  ArrowDown,
+} from "lucide-react";
+import { useState, useEffect } from "react";
 
 const airdrops = [
   {
     id: 1,
-    project: 'DEGEN',
-    logo: '🎩',
-    amount: '1,000',
-    value: '$450',
-    change: '+12%',
-    status: 'live',
-    timeLeft: '2d 14h',
-    gradient: 'from-purple-500 to-pink-500',
+    project: "DEGEN",
+    logo: "🎩",
+    amount: "1,000",
+    value: "$450",
+    change: "+12%",
+    status: "live",
+    timeLeft: "2d 14h",
+    gradient: "from-purple-500 to-pink-500",
   },
   {
     id: 2,
-    project: 'Higher',
-    logo: '⬆️',
-    amount: '500',
-    value: '$280',
-    change: '+8%',
-    status: 'live',
-    timeLeft: '5d 3h',
-    gradient: 'from-green-500 to-emerald-500',
+    project: "Higher",
+    logo: "⬆️",
+    amount: "500",
+    value: "$280",
+    change: "+8%",
+    status: "live",
+    timeLeft: "5d 3h",
+    gradient: "from-green-500 to-emerald-500",
   },
   {
     id: 3,
-    project: 'Base NFT',
-    logo: '🎨',
-    amount: 'Free Mint',
-    value: 'TBD',
-    change: 'New',
-    status: 'upcoming',
-    timeLeft: 'Soon',
-    gradient: 'from-blue-500 to-cyan-500',
+    project: "Base NFT",
+    logo: "🎨",
+    amount: "Free Mint",
+    value: "TBD",
+    change: "New",
+    status: "upcoming",
+    timeLeft: "Soon",
+    gradient: "from-blue-500 to-cyan-500",
   },
   {
     id: 4,
-    project: 'Frames',
-    logo: '🖼️',
-    amount: '250',
-    value: '$125',
-    change: '+5%',
-    status: 'ended',
-    timeLeft: 'Ended',
-    gradient: 'from-gray-500 to-gray-600',
+    project: "Frames",
+    logo: "🖼️",
+    amount: "250",
+    value: "$125",
+    change: "+5%",
+    status: "ended",
+    timeLeft: "Ended",
+    gradient: "from-gray-500 to-gray-600",
   },
-]
+];
 
 export default function AnimatedDashboard() {
-  const [activeTab, setActiveTab] = useState('live')
-  const [totalValue, setTotalValue] = useState(12450)
-  const [notifications, setNotifications] = useState<any[]>([])
-  const [chartData, setChartData] = useState(Array.from({ length: 7 }, () => Math.random() * 100))
+  const [activeTab, setActiveTab] = useState("live");
+  const [totalValue, setTotalValue] = useState(12450);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [chartData, setChartData] = useState(
+    Array.from({ length: 7 }, () => Math.random() * 100),
+  );
 
   useEffect(() => {
     // Animate total value
     const interval = setInterval(() => {
-      setTotalValue(prev => prev + Math.floor(Math.random() * 100 - 30))
-    }, 3000)
+      setTotalValue((prev) => prev + Math.floor(Math.random() * 100 - 30));
+    }, 3000);
 
     // Animate chart data
     const chartInterval = setInterval(() => {
-      setChartData(prev => [...prev.slice(1), Math.random() * 100])
-    }, 2000)
+      setChartData((prev) => [...prev.slice(1), Math.random() * 100]);
+    }, 2000);
 
     // Add notifications
     const notifInterval = setInterval(() => {
       const newNotif = {
         id: Date.now(),
-        text: `New airdrop detected: ${['MEME', 'SOCIAL', 'BUILD', 'MINT'][Math.floor(Math.random() * 4)]}`,
-        time: 'just now',
-      }
-      setNotifications(prev => [newNotif, ...prev.slice(0, 2)])
-    }, 5000)
+        text: `New airdrop detected: ${["MEME", "SOCIAL", "BUILD", "MINT"][Math.floor(Math.random() * 4)]}`,
+        time: "just now",
+      };
+      setNotifications((prev) => [newNotif, ...prev.slice(0, 2)]);
+    }, 5000);
 
     return () => {
-      clearInterval(interval)
-      clearInterval(chartInterval)
-      clearInterval(notifInterval)
-    }
-  }, [])
+      clearInterval(interval);
+      clearInterval(chartInterval);
+      clearInterval(notifInterval);
+    };
+  }, []);
 
-  const filteredAirdrops = airdrops.filter(a => {
-    if (activeTab === 'all') return true
-    return a.status === activeTab
-  })
+  const filteredAirdrops = airdrops.filter((a) => {
+    if (activeTab === "all") return true;
+    return a.status === activeTab;
+  });
 
   return (
     <div className="w-full h-full bg-[#0A0B0D] rounded-xl overflow-hidden">
@@ -98,7 +111,7 @@ export default function AnimatedDashboard() {
           <div className="flex items-center gap-3">
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center"
             >
               <Gift className="w-4 h-4 text-white" />
@@ -185,7 +198,7 @@ export default function AnimatedDashboard() {
 
         {/* Tabs */}
         <div className="flex items-center gap-2 mb-4">
-          {['all', 'live', 'upcoming', 'ended'].map((tab) => (
+          {["all", "live", "upcoming", "ended"].map((tab) => (
             <motion.button
               key={tab}
               whileHover={{ scale: 1.05 }}
@@ -193,8 +206,8 @@ export default function AnimatedDashboard() {
               onClick={() => setActiveTab(tab)}
               className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
                 activeTab === tab
-                  ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                  : 'bg-white/5 text-gray-400 border border-white/10'
+                  ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                  : "bg-white/5 text-gray-400 border border-white/10"
               }`}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -226,24 +239,37 @@ export default function AnimatedDashboard() {
                       {airdrop.logo}
                     </motion.div>
                     <div>
-                      <p className="text-sm font-medium text-white">{airdrop.project}</p>
+                      <p className="text-sm font-medium text-white">
+                        {airdrop.project}
+                      </p>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-xs text-gray-400">{airdrop.amount}</span>
-                        <span className="text-xs text-green-400">{airdrop.value}</span>
+                        <span className="text-xs text-gray-400">
+                          {airdrop.amount}
+                        </span>
+                        <span className="text-xs text-green-400">
+                          {airdrop.value}
+                        </span>
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="text-right">
-                      <p className={`text-xs font-medium ${
-                        airdrop.change.startsWith('+') ? 'text-green-400' : 
-                        airdrop.change === 'New' ? 'text-blue-400' : 'text-gray-400'
-                      }`}>
+                      <p
+                        className={`text-xs font-medium ${
+                          airdrop.change.startsWith("+")
+                            ? "text-green-400"
+                            : airdrop.change === "New"
+                              ? "text-blue-400"
+                              : "text-gray-400"
+                        }`}
+                      >
                         {airdrop.change}
                       </p>
-                      <p className="text-xs text-gray-400">{airdrop.timeLeft}</p>
+                      <p className="text-xs text-gray-400">
+                        {airdrop.timeLeft}
+                      </p>
                     </div>
-                    {airdrop.status === 'live' && (
+                    {airdrop.status === "live" && (
                       <motion.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
@@ -252,12 +278,12 @@ export default function AnimatedDashboard() {
                         Claim
                       </motion.button>
                     )}
-                    {airdrop.status === 'upcoming' && (
+                    {airdrop.status === "upcoming" && (
                       <button className="px-3 py-1 bg-yellow-500/20 rounded-lg text-xs font-medium text-yellow-400 border border-yellow-500/30">
                         Soon
                       </button>
                     )}
-                    {airdrop.status === 'ended' && (
+                    {airdrop.status === "ended" && (
                       <button className="px-3 py-1 bg-gray-500/20 rounded-lg text-xs font-medium text-gray-400 border border-gray-500/30">
                         Ended
                       </button>
@@ -282,7 +308,9 @@ export default function AnimatedDashboard() {
                 <AlertCircle className="w-4 h-4 text-blue-400 mt-0.5" />
                 <div>
                   <p className="text-xs text-white">{notifications[0]?.text}</p>
-                  <p className="text-xs text-gray-400 mt-1">{notifications[0]?.time}</p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    {notifications[0]?.time}
+                  </p>
                 </div>
               </div>
             </motion.div>
@@ -290,5 +318,5 @@ export default function AnimatedDashboard() {
         </AnimatePresence>
       </div>
     </div>
-  )
+  );
 }

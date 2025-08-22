@@ -14,5 +14,11 @@ jobs:
     steps:
       - name: Check App Status
         run: |
-          echo "✅ FarDrops is operational"
-          curl -s -o /dev/null -w "Response: %{http_code}\n" https://fardrops.xyz || true
+          echo "✅ Checking FarDrops status..."
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://fardrops.xyz)
+          if [ "$response" = "200" ]; then
+            echo "✅ FarDrops is operational (HTTP $response)"
+          else
+            echo "⚠️ FarDrops returned HTTP $response"
+            exit 1
+          fi

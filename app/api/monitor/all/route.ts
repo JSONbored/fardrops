@@ -1,96 +1,100 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from "next/server";
 
 // Import all monitor functions
 const monitors = [
-  { name: 'Clanker', endpoint: '/api/monitor/clanker' },
-  { name: 'DEGEN', endpoint: '/api/monitor/degen' },
-  { name: 'Power Badge', endpoint: '/api/monitor/power-badge' },
-  { name: 'General', endpoint: '/api/monitor' }
-]
+  { name: "Clanker", endpoint: "/api/monitor/clanker" },
+  { name: "DEGEN", endpoint: "/api/monitor/degen" },
+  { name: "Power Badge", endpoint: "/api/monitor/power-badge" },
+  { name: "General", endpoint: "/api/monitor" },
+];
 
 interface MonitorResult {
-  monitor: string
-  success: boolean
-  data?: any
-  error?: string
+  monitor: string;
+  success: boolean;
+  data?: any;
+  error?: string;
 }
 
 export async function GET(request: NextRequest) {
   try {
     // Auth check
-    const authHeader = request.headers.get('authorization')
-    const expectedAuth = `Bearer ${process.env.CRON_SECRET || 'development'}`
-    
-    if (process.env.NODE_ENV === 'production' && authHeader !== expectedAuth) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const authHeader = request.headers.get("authorization");
+    const expectedAuth = `Bearer ${process.env.CRON_SECRET || "development"}`;
+
+    if (process.env.NODE_ENV === "production" && authHeader !== expectedAuth) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    console.log('🚀 Running all airdrop monitors...')
-    
-    const results: MonitorResult[] = []
-    const baseUrl = request.nextUrl.origin
+    console.log("🚀 Running all airdrop monitors...");
+
+    const results: MonitorResult[] = [];
+    const baseUrl = request.nextUrl.origin;
 
     // Run all monitors in parallel
-    const monitorPromises = monitors.map(async (monitor): Promise<MonitorResult> => {
-      try {
-        console.log(`Running ${monitor.name} monitor...`)
-        
-        const response = await fetch(`${baseUrl}${monitor.endpoint}`, {
-          headers: {
-            'Authorization': authHeader || '',
-            'Content-Type': 'application/json'
-          }
-        })
+    const monitorPromises = monitors.map(
+      async (monitor): Promise<MonitorResult> => {
+        try {
+          console.log(`Running ${monitor.name} monitor...`);
 
-        if (response.ok) {
-          const data = await response.json()
-          return {
-            monitor: monitor.name,
-            success: true,
-            data
+          const response = await fetch(`${baseUrl}${monitor.endpoint}`, {
+            headers: {
+              Authorization: authHeader || "",
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            return {
+              monitor: monitor.name,
+              success: true,
+              data,
+            };
+          } else {
+            return {
+              monitor: monitor.name,
+              success: false,
+              error: `HTTP ${response.status}`,
+            };
           }
-        } else {
+        } catch (error) {
+          console.error(`${monitor.name} monitor failed:`, error);
           return {
             monitor: monitor.name,
             success: false,
-            error: `HTTP ${response.status}`
-          }
+            error: error instanceof Error ? error.message : "Unknown error",
+          };
         }
-      } catch (error) {
-        console.error(`${monitor.name} monitor failed:`, error)
-        return {
-          monitor: monitor.name,
-          success: false,
-          error: error instanceof Error ? error.message : 'Unknown error'
-        }
-      }
-    })
+      },
+    );
 
-    const monitorResults = await Promise.allSettled(monitorPromises)
-    
+    const monitorResults = await Promise.allSettled(monitorPromises);
+
     for (const result of monitorResults) {
-      if (result.status === 'fulfilled') {
-        results.push(result.value)
+      if (result.status === "fulfilled") {
+        results.push(result.value);
       } else {
         results.push({
-          monitor: 'Unknown',
+          monitor: "Unknown",
           success: false,
-          error: result.reason
-        })
+          error: result.reason,
+        });
       }
     }
 
     // Calculate totals
     const totalAirdrops = results.reduce((sum, r) => {
-      if (r.success && 'data' in r && r.data) {
-        return sum + (r.data.airdropsFound || r.data.tokensFound || 0)
+      if (r.success && "data" in r && r.data) {
+        return sum + (r.data.airdropsFound || r.data.tokensFound || 0);
       }
-      return sum
-    }, 0)
+      return sum;
+    }, 0);
 
-    const successfulMonitors = results.filter(r => r.success).length
+    const successfulMonitors = results.filter((r) => r.success).length;
 
-    console.log(`✅ Monitoring complete: ${totalAirdrops} airdrops found across ${successfulMonitors}/${monitors.length} monitors`)
+    console.log(
+      `✅ Monitoring complete: ${totalAirdrops} airdrops found across ${successfulMonitors}/${monitors.length} monitors`,
+    );
 
     return NextResponse.json({
       success: true,
@@ -98,22 +102,21 @@ export async function GET(request: NextRequest) {
       summary: {
         totalAirdrops,
         successfulMonitors,
-        totalMonitors: monitors.length
+        totalMonitors: monitors.length,
       },
-      results
-    })
-
+      results,
+    });
   } catch (error) {
-    console.error('Master monitoring error:', error)
+    console.error("Master monitoring error:", error);
     return NextResponse.json(
-      { error: 'Failed to run monitors' },
-      { status: 500 }
-    )
+      { error: "Failed to run monitors" },
+      { status: 500 },
+    );
   }
 }
 
 // This endpoint can be called by Vercel Cron or GitHub Actions
 export async function POST(request: NextRequest) {
   // Same as GET but for POST requests
-  return GET(request)
+  return GET(request);
 }

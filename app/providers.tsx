@@ -1,14 +1,14 @@
-'use client'
+"use client";
 
-import { ReactNode, useEffect } from 'react'
-import { OnchainKitProvider } from '@coinbase/onchainkit'
-import { base } from 'viem/chains'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { WagmiProvider, createConfig, http } from 'wagmi'
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
-import { farcasterMiniApp } from '@farcaster/miniapp-wagmi-connector'
-import '@rainbow-me/rainbowkit/styles.css'
-import '@coinbase/onchainkit/styles.css'
+import { ReactNode, useEffect } from "react";
+import { OnchainKitProvider } from "@coinbase/onchainkit";
+import { base } from "viem/chains";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { WagmiProvider, createConfig, http } from "wagmi";
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { farcasterMiniApp } from "@farcaster/miniapp-wagmi-connector";
+import "@rainbow-me/rainbowkit/styles.css";
+import "@coinbase/onchainkit/styles.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,29 +17,29 @@ const queryClient = new QueryClient({
       retry: 1,
     },
   },
-})
+});
 
 const config = createConfig({
   chains: [base],
-  connectors: [
-    farcasterMiniApp()
-  ],
+  connectors: [farcasterMiniApp()],
   transports: {
-    [base.id]: http(process.env.NEXT_PUBLIC_BASE_RPC_URL || 'https://mainnet.base.org'),
+    [base.id]: http(
+      process.env.NEXT_PUBLIC_BASE_RPC_URL || "https://mainnet.base.org",
+    ),
   },
   ssr: true,
-})
+});
 
 export function Providers({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Clean up any extension-injected globals that might cause issues
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       // Prevent MetaMask from auto-connecting
       if ((window as any).ethereum) {
-        (window as any).ethereum.autoRefreshOnNetworkChange = false
+        (window as any).ethereum.autoRefreshOnNetworkChange = false;
       }
     }
-  }, [])
+  }, []);
 
   return (
     <WagmiProvider config={config}>
@@ -54,5 +54,5 @@ export function Providers({ children }: { children: ReactNode }) {
         </OnchainKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
-  )
+  );
 }

@@ -1,38 +1,60 @@
-'use client'
+"use client";
 
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
-import { ArrowRight, Sparkles, Zap, Shield, TrendingUp, Users, DollarSign, Globe, Check, ChevronRight, Star, ArrowUpRight } from 'lucide-react'
-import { useState, useEffect, useRef } from 'react'
-import Link from 'next/link'
-import dynamic from 'next/dynamic'
-import AnimatedDashboard from '@/components/AnimatedDashboard'
-import { ConnectWallet } from '@/components/ConnectWallet'
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValue,
+  useSpring,
+} from "framer-motion";
+import {
+  ArrowRight,
+  Sparkles,
+  Zap,
+  Shield,
+  TrendingUp,
+  Users,
+  DollarSign,
+  Globe,
+  Check,
+  ChevronRight,
+  Star,
+  ArrowUpRight,
+} from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import AnimatedDashboard from "@/components/AnimatedDashboard";
+import { ConnectWallet } from "@/components/ConnectWallet";
 
 export default function Home() {
-  const [mounted, setMounted] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll()
-  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
+  const [mounted, setMounted] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
   useEffect(() => {
-    setMounted(true)
-    
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e
-      mouseX.set(clientX)
-      mouseY.set(clientY)
-    }
-    
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [mouseX, mouseY])
+    setMounted(true);
 
-  if (!mounted) return null
+    const handleMouseMove = (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+      mouseX.set(clientX);
+      mouseY.set(clientY);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
+  if (!mounted) return null;
 
   return (
-    <div ref={containerRef} className="relative min-h-screen bg-[#0A0B0D] text-white overflow-x-hidden">
+    <div
+      ref={containerRef}
+      className="relative min-h-screen bg-[#0A0B0D] text-white overflow-x-hidden"
+    >
       {/* Progress Bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 origin-left z-50"
@@ -47,11 +69,11 @@ export default function Home() {
       </div>
 
       {/* Dot Pattern */}
-      <div 
+      <div
         className="fixed inset-0 opacity-[0.02]"
         style={{
           backgroundImage: `radial-gradient(circle, white 1px, transparent 1px)`,
-          backgroundSize: '50px 50px',
+          backgroundSize: "50px 50px",
         }}
       />
 
@@ -60,16 +82,31 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-8">
-              <motion.div 
+              <motion.div
                 whileHover={{ scale: 1.05 }}
                 className="font-bold text-xl"
               >
                 FarDrops
               </motion.div>
               <div className="hidden md:flex items-center space-x-6">
-                <Link href="#features" className="text-gray-400 hover:text-white transition">Features</Link>
-                <Link href="#how-it-works" className="text-gray-400 hover:text-white transition">How it Works</Link>
-                <Link href="#pricing" className="text-gray-400 hover:text-white transition">Pricing</Link>
+                <Link
+                  href="#features"
+                  className="text-gray-400 hover:text-white transition"
+                >
+                  Features
+                </Link>
+                <Link
+                  href="#how-it-works"
+                  className="text-gray-400 hover:text-white transition"
+                >
+                  How it Works
+                </Link>
+                <Link
+                  href="#pricing"
+                  className="text-gray-400 hover:text-white transition"
+                >
+                  Pricing
+                </Link>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -96,7 +133,9 @@ export default function Home() {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-8"
             >
               <Sparkles className="w-4 h-4 text-blue-400" />
-              <span className="text-sm text-blue-400">Now Live on Farcaster</span>
+              <span className="text-sm text-blue-400">
+                Now Live on Farcaster
+              </span>
             </motion.div>
 
             {/* Main Headline */}
@@ -119,7 +158,8 @@ export default function Home() {
               transition={{ delay: 0.3 }}
               className="text-xl text-gray-400 max-w-2xl mx-auto mb-10"
             >
-              Never miss DEGEN, frame tokens, or NFT drops. Get instant notifications and claim directly from Farcaster.
+              Never miss DEGEN, frame tokens, or NFT drops. Get instant
+              notifications and claim directly from Farcaster.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -157,7 +197,7 @@ export default function Home() {
             <div className="aspect-[16/9] rounded-2xl bg-gradient-to-b from-white/5 to-white/10 backdrop-blur border border-white/10 p-2">
               <AnimatedDashboard />
             </div>
-            
+
             {/* Floating Cards */}
             <motion.div
               animate={{ y: [0, -10, 0] }}
@@ -174,7 +214,7 @@ export default function Home() {
                 </div>
               </div>
             </motion.div>
-            
+
             <motion.div
               animate={{ y: [0, 10, 0] }}
               transition={{ duration: 3, repeat: Infinity, delay: 1 }}
@@ -199,10 +239,10 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { label: 'Active Users', value: '5,000+', icon: Users },
-              { label: 'Airdrops Tracked', value: '150+', icon: TrendingUp },
-              { label: 'Total Value', value: '$2.5M', icon: DollarSign },
-              { label: 'Success Rate', value: '98%', icon: Shield },
+              { label: "Active Users", value: "5,000+", icon: Users },
+              { label: "Airdrops Tracked", value: "150+", icon: TrendingUp },
+              { label: "Total Value", value: "$2.5M", icon: DollarSign },
+              { label: "Success Rate", value: "98%", icon: Shield },
             ].map((stat, index) => (
               <motion.div
                 key={index}
@@ -244,39 +284,45 @@ export default function Home() {
             {[
               {
                 icon: Shield,
-                title: 'Verified Projects',
-                description: 'We verify every airdrop for legitimacy and safety before tracking.',
-                color: 'blue',
+                title: "Verified Projects",
+                description:
+                  "We verify every airdrop for legitimacy and safety before tracking.",
+                color: "blue",
               },
               {
                 icon: Zap,
-                title: 'Instant Alerts',
-                description: 'Get notified immediately when new airdrops are detected.',
-                color: 'purple',
+                title: "Instant Alerts",
+                description:
+                  "Get notified immediately when new airdrops are detected.",
+                color: "purple",
               },
               {
                 icon: TrendingUp,
-                title: 'Portfolio Tracking',
-                description: 'Monitor your airdrop portfolio and total earnings in real-time.',
-                color: 'pink',
+                title: "Portfolio Tracking",
+                description:
+                  "Monitor your airdrop portfolio and total earnings in real-time.",
+                color: "pink",
               },
               {
                 icon: Users,
-                title: 'Power Badge Perks',
-                description: 'Exclusive airdrops and early access for Power Badge holders.',
-                color: 'green',
+                title: "Power Badge Perks",
+                description:
+                  "Exclusive airdrops and early access for Power Badge holders.",
+                color: "green",
               },
               {
                 icon: Globe,
-                title: 'Multi-Chain Support',
-                description: 'Track airdrops across Base, Ethereum, and other chains.',
-                color: 'orange',
+                title: "Multi-Chain Support",
+                description:
+                  "Track airdrops across Base, Ethereum, and other chains.",
+                color: "orange",
               },
               {
                 icon: DollarSign,
-                title: 'Value Estimation',
-                description: 'Real-time value estimates for all tracked airdrops.',
-                color: 'cyan',
+                title: "Value Estimation",
+                description:
+                  "Real-time value estimates for all tracked airdrops.",
+                color: "cyan",
               },
             ].map((feature, index) => (
               <motion.div
@@ -288,10 +334,16 @@ export default function Home() {
                 className="group"
               >
                 <div className="p-8 rounded-2xl bg-white/5 backdrop-blur border border-white/10 hover:bg-white/10 transition-all">
-                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-${feature.color}-500/20 mb-6`}>
-                    <feature.icon className={`w-6 h-6 text-${feature.color}-400`} />
+                  <div
+                    className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-${feature.color}-500/20 mb-6`}
+                  >
+                    <feature.icon
+                      className={`w-6 h-6 text-${feature.color}-400`}
+                    />
                   </div>
-                  <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                  <h3 className="text-xl font-semibold mb-3">
+                    {feature.title}
+                  </h3>
                   <p className="text-gray-400">{feature.description}</p>
                 </div>
               </motion.div>
@@ -320,19 +372,22 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                step: '01',
-                title: 'Connect Wallet',
-                description: 'Link your Farcaster account and Ethereum wallet to get started.',
+                step: "01",
+                title: "Connect Wallet",
+                description:
+                  "Link your Farcaster account and Ethereum wallet to get started.",
               },
               {
-                step: '02',
-                title: 'Set Preferences',
-                description: 'Choose which types of airdrops you want to track and get notified about.',
+                step: "02",
+                title: "Set Preferences",
+                description:
+                  "Choose which types of airdrops you want to track and get notified about.",
               },
               {
-                step: '03',
-                title: 'Claim Rewards',
-                description: 'Get instant alerts and claim your airdrops directly from Farcaster.',
+                step: "03",
+                title: "Claim Rewards",
+                description:
+                  "Get instant alerts and claim your airdrops directly from Farcaster.",
               },
             ].map((item, index) => (
               <motion.div
@@ -343,7 +398,9 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="relative"
               >
-                <div className="text-6xl font-bold text-white/5 mb-4">{item.step}</div>
+                <div className="text-6xl font-bold text-white/5 mb-4">
+                  {item.step}
+                </div>
                 <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
                 <p className="text-gray-400">{item.description}</p>
                 {index < 2 && (
@@ -377,43 +434,43 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                name: 'Free',
-                price: '$0',
-                period: 'forever',
+                name: "Free",
+                price: "$0",
+                period: "forever",
                 features: [
-                  '5 airdrops per month',
-                  'Basic notifications',
-                  'Community support',
+                  "5 airdrops per month",
+                  "Basic notifications",
+                  "Community support",
                 ],
-                cta: 'Get Started',
+                cta: "Get Started",
                 popular: false,
               },
               {
-                name: 'Pro',
-                price: '0.001 ETH',
-                period: '/month',
+                name: "Pro",
+                price: "0.001 ETH",
+                period: "/month",
                 features: [
-                  'Unlimited airdrops',
-                  'Instant notifications',
-                  'Priority support',
-                  'Power Badge perks',
-                  'API access',
+                  "Unlimited airdrops",
+                  "Instant notifications",
+                  "Priority support",
+                  "Power Badge perks",
+                  "API access",
                 ],
-                cta: 'Go Pro',
+                cta: "Go Pro",
                 popular: true,
               },
               {
-                name: 'Team',
-                price: '0.005 ETH',
-                period: '/month',
+                name: "Team",
+                price: "0.005 ETH",
+                period: "/month",
                 features: [
-                  'Everything in Pro',
-                  'Multiple accounts',
-                  'Custom webhooks',
-                  'Dedicated support',
-                  'White-label options',
+                  "Everything in Pro",
+                  "Multiple accounts",
+                  "Custom webhooks",
+                  "Dedicated support",
+                  "White-label options",
                 ],
-                cta: 'Contact Sales',
+                cta: "Contact Sales",
                 popular: false,
               },
             ].map((plan, index) => (
@@ -424,9 +481,9 @@ export default function Home() {
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
                 className={`relative p-8 rounded-2xl ${
-                  plan.popular 
-                    ? 'bg-gradient-to-b from-blue-500/20 to-purple-500/20 border-2 border-blue-500/50' 
-                    : 'bg-white/5 border border-white/10'
+                  plan.popular
+                    ? "bg-gradient-to-b from-blue-500/20 to-purple-500/20 border-2 border-blue-500/50"
+                    : "bg-white/5 border border-white/10"
                 }`}
               >
                 {plan.popular && (
@@ -456,8 +513,8 @@ export default function Home() {
                   whileTap={{ scale: 0.95 }}
                   className={`w-full py-3 rounded-full font-medium ${
                     plan.popular
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-500'
-                      : 'bg-white/10 border border-white/20'
+                      ? "bg-gradient-to-r from-blue-500 to-purple-500"
+                      : "bg-white/10 border border-white/20"
                   }`}
                 >
                   {plan.cta}
@@ -507,13 +564,28 @@ export default function Home() {
               <span className="text-gray-400">© 2025</span>
             </div>
             <div className="flex items-center gap-6">
-              <Link href="/terms" className="text-gray-400 hover:text-white transition">Terms</Link>
-              <Link href="/privacy" className="text-gray-400 hover:text-white transition">Privacy</Link>
-              <Link href="https://warpcast.com" className="text-gray-400 hover:text-white transition">Warpcast</Link>
+              <Link
+                href="/terms"
+                className="text-gray-400 hover:text-white transition"
+              >
+                Terms
+              </Link>
+              <Link
+                href="/privacy"
+                className="text-gray-400 hover:text-white transition"
+              >
+                Privacy
+              </Link>
+              <Link
+                href="https://warpcast.com"
+                className="text-gray-400 hover:text-white transition"
+              >
+                Warpcast
+              </Link>
             </div>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }
