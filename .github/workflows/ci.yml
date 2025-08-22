@@ -1,0 +1,305 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+env:
+  NODE_VERSION: "20.x"
+  NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+jobs:
+  # ========================================
+  # Stage 1: Code Quality
+  # ========================================
+  quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format:check || npx prettier --check "**/*.{ts,tsx,js,jsx,json,md}"
+        continue-on-error: true
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Type check
+        run: npm run type-check || npx tsc --noEmit
+
+      - name: Security audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+  # ========================================
+  # Stage 2: Build & Test
+  # ========================================
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+        env:
+          SKIP_ENV_VALIDATION: true
+
+      - name: Check build output
+        run: |
+          echo "Build size:"
+          du -sh .next
+          echo "Static pages:"
+          ls -la .next/static 2>/dev/null || echo "No static directory"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: .next
+          retention-days: 7
+
+  # ========================================
+  # Stage 3: Tests
+  # ========================================
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm test -- --coverage
+        continue-on-error: true
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+        continue-on-error: true
+
+  # ========================================
+  # Stage 4: Security Scanning
+  # ========================================
+  security:
+    name: Security Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          queries: security-and-quality
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+      - name: Check for secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+        continue-on-error: true
+
+  # ========================================
+  # Stage 5: Farcaster Integration Check
+  # ========================================
+  farcaster-check:
+    name: Farcaster Mini App Validation
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Farcaster manifest
+        run: |
+          if [ ! -f "public/.well-known/farcaster.json" ]; then
+            echo "❌ Missing farcaster.json manifest"
+            exit 1
+          fi
+          
+          # Validate JSON structure
+          cat public/.well-known/farcaster.json | jq '.' > /dev/null
+          
+          echo "✅ Farcaster manifest is valid"
+
+      - name: Check Mini App requirements
+        run: |
+          # Check for required files
+          files=(
+            "public/icon.svg"
+            "public/og-image.svg"
+            "app/api/webhooks/farcaster/route.ts"
+          )
+          
+          for file in "${files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "⚠️ Missing: $file"
+            else
+              echo "✅ Found: $file"
+            fi
+          done
+
+  # ========================================
+  # Stage 6: Base Chain Compatibility
+  # ========================================
+  base-check:
+    name: Base Chain Integration
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check OnchainKit integration
+        run: |
+          # Verify OnchainKit is installed
+          npm list @coinbase/onchainkit || echo "⚠️ OnchainKit not found"
+          
+          # Check for wagmi and viem
+          npm list wagmi viem || echo "⚠️ Web3 dependencies missing"
+
+      - name: Validate smart contracts
+        if: hashFiles('contracts/*.sol') != ''
+        run: |
+          echo "Smart contracts detected"
+          # Add contract compilation/validation here if needed
+
+  # ========================================
+  # Stage 7: Performance Check
+  # ========================================
+  performance:
+    name: Performance Analysis
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: .next
+
+      - name: Bundle size check
+        run: |
+          MAX_SIZE=$((50 * 1024 * 1024))  # 50MB limit
+          ACTUAL_SIZE=$(du -sb .next | cut -f1)
+          
+          echo "Bundle size: $(($ACTUAL_SIZE / 1024 / 1024))MB"
+          
+          if [ $ACTUAL_SIZE -gt $MAX_SIZE ]; then
+            echo "⚠️ Bundle exceeds 50MB limit"
+            exit 1
+          fi
+          
+          echo "✅ Bundle size within limits"
+
+      - name: Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            http://localhost:3000
+            http://localhost:3000/dashboard
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+        continue-on-error: true
+
+  # ========================================
+  # Stage 8: CI Summary
+  # ========================================
+  ci-success:
+    name: CI Complete
+    runs-on: ubuntu-latest
+    needs: [quality, build, test, security, farcaster-check]
+    if: always()
+    steps:
+      - name: Check CI Status
+        run: |
+          if [ "${{ needs.quality.result }}" != "success" ] || \
+             [ "${{ needs.build.result }}" != "success" ]; then
+            echo "❌ CI Failed"
+            exit 1
+          fi
+          echo "✅ CI Passed Successfully!"
+
+      - name: Add PR Comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `## CI Results ✅
+            
+            - **Code Quality**: ${{ needs.quality.result }}
+            - **Build**: ${{ needs.build.result }}
+            - **Tests**: ${{ needs.test.result }}
+            - **Security**: ${{ needs.security.result }}
+            - **Farcaster**: ${{ needs.farcaster-check.result }}
+            
+            Ready for review!`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+        continue-on-error: true

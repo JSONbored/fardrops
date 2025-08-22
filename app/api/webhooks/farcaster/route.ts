@@ -44,21 +44,26 @@ export async function POST(request: NextRequest) {
     switch (type) {
       case 'app.opened':
         // Track app opens for analytics
-        console.log('App opened by user:', data.fid)
+        const sanitizedFidOpen = String(data.fid).replace(/\r|\n/g, "")
+        console.log('App opened by user:', sanitizedFidOpen)
         break
         
       case 'app.closed':
         // Clean up any session data
-        console.log('App closed by user:', data.fid)
+        const sanitizedFidClose = String(data.fid).replace(/\r|\n/g, "")
+        console.log('App closed by user:', sanitizedFidClose)
         break
         
       case 'user.authenticated':
         // Handle user authentication
-        console.log('User authenticated:', data.fid)
+        const sanitizedFidAuth = String(data.fid).replace(/\r|\n/g, "")
+        console.log('User authenticated:', sanitizedFidAuth)
         break
         
       default:
-        console.log('Unknown event type:', type)
+        // Remove newlines to prevent log injection from event type
+        const sanitizedType = typeof type === "string" ? type.replace(/\r|\n/g, "") : String(type)
+        console.log('Unknown event type:', sanitizedType)
     }
     
     return NextResponse.json({ success: true })

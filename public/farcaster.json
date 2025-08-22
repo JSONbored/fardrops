@@ -1,14 +1,11 @@
 {
-  "accountAssociation": {
-    "header": "eyJmaWQiOjEyMzQ1LCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4MGVmODE2NjgwYUQxQTI1Q0I0NGQ0NzI3YTlhNmI2MkFCOTk5Njc4NiJ9",
-    "payload": "eyJkb21haW4iOiJmYXJkcm9wcy54eXoifQ",
-    "signature": "MHhlZmZlY3RpdmVseV9hX3NpZ25hdHVyZV9oZXJl"
-  },
   "frame": {
-    "version": "0.0.0",
+    "version": "next",
     "name": "FarDrops",
     "iconUrl": "https://fardrops.xyz/icon.png",
-    "homeUrl": "https://fardrops.xyz"
+    "homeUrl": "https://fardrops.xyz",
+    "splashImageUrl": "https://fardrops.xyz/og-image.png",
+    "splashBackgroundColor": "#8B5CF6"
   },
   "baseBuilder": {
     "allowedAddresses": ["0x0ef816680aD1A25CB44d4727a9a6b62AB9996786"]

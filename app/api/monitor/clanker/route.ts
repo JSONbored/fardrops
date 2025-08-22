@@ -35,7 +35,19 @@ export async function GET(request: NextRequest) {
     console.log('🤖 Monitoring Clanker for new token launches...')
 
     // Fetch recent casts from Clanker bot
-    const hubUrl = process.env.FARCASTER_HUB_URL || 'https://api.neynar.com/v2'
+    // Only allow trusted URLs for the Farcaster Hub endpoint to mitigate SSRF risk
+    const allowedHubUrls = [
+      'https://api.neynar.com/v2',
+      'https://hub-grpc.pinata.cloud',
+      'https://hub.farcaster.xyz',
+    ]
+    let hubUrl = process.env.FARCASTER_HUB_URL || 'https://api.neynar.com/v2'
+    if (!allowedHubUrls.includes(hubUrl)) {
+      console.warn(
+        `Untrusted FARCASTER_HUB_URL "${hubUrl}" not in allow-list, falling back to default.`
+      )
+      hubUrl = 'https://api.neynar.com/v2'
+    }
     const apiKey = process.env.NEYNAR_API_KEY || ''
     
     // Using Neynar API for better reliability (you can also use Hub directly)

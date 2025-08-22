@@ -1,0 +1,303 @@
+name: Release & Deploy
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version (e.g., 1.0.0)"
+        required: true
+        type: string
+      deploy_env:
+        description: "Deployment environment"
+        required: true
+        type: choice
+        options:
+          - production
+          - staging
+
+env:
+  NODE_VERSION: "20.x"
+
+permissions:
+  contents: write
+  deployments: write
+  pull-requests: write
+
+jobs:
+  # ========================================
+  # Pre-Release Checks
+  # ========================================
+  pre-release:
+    name: Pre-Release Validation
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Extract version
+        id: version
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+            VERSION=${VERSION#v}
+          else
+            VERSION="${{ github.event.inputs.version }}"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Version: $VERSION"
+
+      - name: Run full CI checks
+        run: |
+          npm run lint
+          npm run type-check
+          npm run build
+          npm test
+
+      - name: Check for breaking changes
+        run: |
+          # Check if this is a major version bump
+          IFS='.' read -ra VERSION_PARTS <<< "${{ steps.version.outputs.version }}"
+          MAJOR=${VERSION_PARTS[0]}
+          
+          if [ "$MAJOR" -gt 0 ]; then
+            echo "⚠️ Major version release detected - ensure breaking changes are documented"
+          fi
+
+  # ========================================
+  # Build & Package
+  # ========================================
+  build-release:
+    name: Build Release Package
+    runs-on: ubuntu-latest
+    needs: pre-release
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production bundle
+        run: |
+          npm run build
+          echo "Build completed successfully"
+
+      - name: Create deployment package
+        run: |
+          # Create a deployment package
+          tar -czf fardrops-${{ needs.pre-release.outputs.version }}.tar.gz \
+            .next \
+            public \
+            package.json \
+            package-lock.json \
+            next.config.js
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-package-${{ needs.pre-release.outputs.version }}
+          path: fardrops-${{ needs.pre-release.outputs.version }}.tar.gz
+          retention-days: 30
+
+  # ========================================
+  # Generate Release Notes
+  # ========================================
+  release-notes:
+    name: Generate Release Notes
+    runs-on: ubuntu-latest
+    needs: pre-release
+    outputs:
+      changelog: ${{ steps.changelog.outputs.changelog }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get the previous tag
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          
+          if [ -z "$PREV_TAG" ]; then
+            PREV_TAG=$(git rev-list --max-parents=0 HEAD)
+          fi
+          
+          # Generate changelog with categories
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "## What's Changed" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          
+          echo "### ✨ Features" >> $GITHUB_OUTPUT
+          git log --pretty=format:"- %s (%h)" --grep="^feat" $PREV_TAG..HEAD >> $GITHUB_OUTPUT || true
+          echo "" >> $GITHUB_OUTPUT
+          
+          echo "### 🐛 Bug Fixes" >> $GITHUB_OUTPUT
+          git log --pretty=format:"- %s (%h)" --grep="^fix" $PREV_TAG..HEAD >> $GITHUB_OUTPUT || true
+          echo "" >> $GITHUB_OUTPUT
+          
+          echo "### 🔧 Maintenance" >> $GITHUB_OUTPUT
+          git log --pretty=format:"- %s (%h)" --grep="^chore\|^docs\|^refactor" $PREV_TAG..HEAD >> $GITHUB_OUTPUT || true
+          echo "" >> $GITHUB_OUTPUT
+          
+          echo "### 📊 Statistics" >> $GITHUB_OUTPUT
+          echo "- Commits: $(git rev-list --count $PREV_TAG..HEAD)" >> $GITHUB_OUTPUT
+          echo "- Files changed: $(git diff --name-only $PREV_TAG..HEAD | wc -l)" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+  # ========================================
+  # Create GitHub Release
+  # ========================================
+  github-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [pre-release, build-release, release-notes]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-package-${{ needs.pre-release.outputs.version }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ needs.pre-release.outputs.version }}
+          name: FarDrops v${{ needs.pre-release.outputs.version }}
+          body: |
+            # 🚀 FarDrops v${{ needs.pre-release.outputs.version }}
+            
+            Never miss a Farcaster airdrop again!
+            
+            ${{ needs.release-notes.outputs.changelog }}
+            
+            ## 📦 Installation
+            
+            Visit [fardrops.xyz](https://fardrops.xyz) or install the Farcaster Mini App.
+            
+            ## 🔗 Links
+            
+            - [Documentation](https://fardrops.xyz/docs)
+            - [Farcaster Channel](https://warpcast.com/~/channel/fardrops)
+            - [Support](https://fardrops.xyz/support)
+            
+            ---
+            **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ needs.release-notes.outputs.prev_tag }}...v${{ needs.pre-release.outputs.version }}
+          files: |
+            fardrops-${{ needs.pre-release.outputs.version }}.tar.gz
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+
+  # ========================================
+  # Deploy to Vercel
+  # ========================================
+  deploy:
+    name: Deploy to Vercel
+    runs-on: ubuntu-latest
+    needs: [github-release, pre-release]
+    if: github.event_name == 'push' || github.event.inputs.deploy_env == 'production'
+    environment:
+      name: production
+      url: https://fardrops.xyz
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+          alias-domains: |
+            fardrops.xyz
+            www.fardrops.xyz
+
+      - name: Post-deployment verification
+        run: |
+          echo "🎉 Deployment complete!"
+          echo "Version: v${{ needs.pre-release.outputs.version }}"
+          echo "Environment: Production"
+          echo "URL: https://fardrops.xyz"
+          
+          # Wait for deployment to be live
+          sleep 30
+          
+          # Verify deployment
+          curl -s -o /dev/null -w "%{http_code}" https://fardrops.xyz | grep -q "200" && echo "✅ Site is live" || echo "⚠️ Site verification failed"
+
+  # ========================================
+  # Notification
+  # ========================================
+  notify:
+    name: Send Notifications
+    runs-on: ubuntu-latest
+    needs: [deploy, pre-release]
+    if: always()
+    steps:
+      - name: Send Discord notification
+        if: success()
+        run: |
+          curl -X POST ${{ secrets.DISCORD_WEBHOOK_URL }} \
+            -H "Content-Type: application/json" \
+            -d '{
+              "embeds": [{
+                "title": "🚀 FarDrops v${{ needs.pre-release.outputs.version }} Released!",
+                "description": "A new version has been deployed to production.",
+                "color": 5814783,
+                "fields": [
+                  {
+                    "name": "Version",
+                    "value": "v${{ needs.pre-release.outputs.version }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Environment",
+                    "value": "Production",
+                    "inline": true
+                  },
+                  {
+                    "name": "URL",
+                    "value": "[fardrops.xyz](https://fardrops.xyz)",
+                    "inline": false
+                  }
+                ],
+                "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%S.000Z)'"
+              }]
+            }'
+        continue-on-error: true
+
+      - name: Create deployment summary
+        run: |
+          echo "# 🎉 Release Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** v${{ needs.pre-release.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** [fardrops.xyz](https://fardrops.xyz)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Verify deployment at https://fardrops.xyz" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Test critical user flows" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Monitor error rates" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Announce release on Farcaster" >> $GITHUB_STEP_SUMMARY

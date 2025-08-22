@@ -1,0 +1,18 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pure Black Circle -->
+  <circle cx="256" cy="256" r="256" fill="#000000"/>
+  
+  <!-- The Drop System - Three drops falling into a container -->
+  <!-- Main center drop -->
+  <path d="M256 320 L286 220 L226 220 Z" fill="white"/>
+  
+  <!-- Left drop (smaller, higher) -->
+  <path d="M180 260 L195 210 L165 210 Z" fill="white" opacity="0.6"/>
+  
+  <!-- Right drop (smaller, mid-height) -->
+  <path d="M332 280 L347 230 L317 230 Z" fill="white" opacity="0.6"/>
+  
+  <!-- Collection vessel - minimalist U shape -->
+  <path d="M160 360 Q160 420, 220 420 L292 420 Q352 420, 352 360" 
+        stroke="white" stroke-width="16" stroke-linecap="round" fill="none"/>
+</svg>
