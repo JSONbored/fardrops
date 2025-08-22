@@ -70,11 +70,6 @@ jobs:
         uses: github/codeql-action/init@4f3212b61783c3c68e8309a0f18a699764811cda # v3.27.1
         with:
           languages: javascript-typescript
-          config: |
-            name: "FarDrops Security Config"
-            queries:
-              - uses: security-extended
-              - uses: security-experimental
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@4f3212b61783c3c68e8309a0f18a699764811cda # v3.27.1
