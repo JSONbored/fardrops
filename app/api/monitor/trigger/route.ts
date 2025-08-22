@@ -16,11 +16,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const baseUrl = request.nextUrl.origin;
+    // Use a fixed internal URL to prevent SSRF
+    const internalUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : process.env.NODE_ENV === "production"
+        ? "https://fardrops.xyz"
+        : "http://localhost:3000";
+
     const authHeader = `Bearer ${process.env.CRON_SECRET || "development"}`;
 
-    // Trigger all monitors
-    const response = await fetch(`${baseUrl}/api/monitor/all`, {
+    // Trigger all monitors with validated URL
+    const response = await fetch(`${internalUrl}/api/monitor/all`, {
       headers: {
         Authorization: authHeader,
         "Content-Type": "application/json",

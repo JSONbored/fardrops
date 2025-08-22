@@ -42,31 +42,32 @@ export async function GET(request: NextRequest) {
       "https://hub-grpc.pinata.cloud",
       "https://hub.farcaster.xyz",
     ];
-    let hubUrl = process.env.FARCASTER_HUB_URL || "https://api.neynar.com/v2";
+    const envHubUrl =
+      process.env.FARCASTER_HUB_URL || "https://api.neynar.com/v2";
 
-    // Use exact match to prevent URL substring attacks
-    const isAllowedUrl = allowedHubUrls.some((allowed) => {
+    // Find the matching allowed URL or use default
+    let hubUrl = "https://api.neynar.com/v2"; // default safe value
+
+    for (const allowed of allowedHubUrls) {
       try {
-        const envUrl = new URL(hubUrl);
+        const envUrl = new URL(envHubUrl);
         const allowedUrl = new URL(allowed);
-        return (
+        if (
           envUrl.origin === allowedUrl.origin &&
           envUrl.pathname.startsWith(allowedUrl.pathname)
-        );
+        ) {
+          // Use the allowed URL, not the env variable
+          hubUrl = allowed;
+          break;
+        }
       } catch {
-        return false;
+        // Invalid URL, skip
       }
-    });
-
-    if (!isAllowedUrl) {
-      console.warn(
-        `Untrusted FARCASTER_HUB_URL "${hubUrl}" not in allow-list, falling back to default.`,
-      );
-      hubUrl = "https://api.neynar.com/v2";
     }
+
     const apiKey = process.env.NEYNAR_API_KEY || "";
 
-    // Using Neynar API for better reliability (you can also use Hub directly)
+    // Using validated URL for the request
     const response = await fetch(
       `${hubUrl}/farcaster/feed/user/${CLANKER_FID}?limit=25`,
       {

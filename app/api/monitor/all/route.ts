@@ -28,7 +28,13 @@ export async function GET(request: NextRequest) {
     console.log("🚀 Running all airdrop monitors...");
 
     const results: MonitorResult[] = [];
-    const baseUrl = request.nextUrl.origin;
+
+    // Use a fixed internal URL to prevent SSRF
+    const internalUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : process.env.NODE_ENV === "production"
+        ? "https://fardrops.xyz"
+        : "http://localhost:3000";
 
     // Run all monitors in parallel
     const monitorPromises = monitors.map(
@@ -36,7 +42,7 @@ export async function GET(request: NextRequest) {
         try {
           console.log(`Running ${monitor.name} monitor...`);
 
-          const response = await fetch(`${baseUrl}${monitor.endpoint}`, {
+          const response = await fetch(`${internalUrl}${monitor.endpoint}`, {
             headers: {
               Authorization: authHeader || "",
               "Content-Type": "application/json",

@@ -328,8 +328,8 @@ export default function BrandPage() {
                 <li className="flex items-start">
                   <span className="text-purple-500 mr-2">•</span>
                   <span>
-                    <strong>Helpful:</strong> We're here to make sure you never
-                    miss opportunities
+                    <strong>Helpful:</strong> We&apos;re here to make sure you
+                    never miss opportunities
                   </span>
                 </li>
                 <li className="flex items-start">
@@ -356,20 +356,22 @@ export default function BrandPage() {
               <div className="space-y-4">
                 <div>
                   <p className="text-purple-400 font-semibold mb-1">Tagline</p>
-                  <p className="text-white">"Never miss a drop"</p>
+                  <p className="text-white">&ldquo;Never miss a drop&rdquo;</p>
                 </div>
                 <div>
                   <p className="text-purple-400 font-semibold mb-1">
                     Value Prop
                   </p>
                   <p className="text-white">
-                    "The first dedicated airdrop tracker for Farcaster"
+                    &ldquo;The first dedicated airdrop tracker for
+                    Farcaster&rdquo;
                   </p>
                 </div>
                 <div>
                   <p className="text-purple-400 font-semibold mb-1">Mission</p>
                   <p className="text-white">
-                    "Democratizing airdrop access for the Farcaster community"
+                    &ldquo;Democratizing airdrop access for the Farcaster
+                    community&rdquo;
                   </p>
                 </div>
               </div>
@@ -386,7 +388,7 @@ export default function BrandPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-lg font-semibold text-green-500 mb-4">
-                  ✓ Do's
+                  ✓ Do&apos;s
                 </h3>
                 <ul className="space-y-2 text-gray-300">
                   <li>• Use purple gradient backgrounds for premium feel</li>
@@ -398,14 +400,14 @@ export default function BrandPage() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-red-500 mb-4">
-                  ✗ Don'ts
+                  ✗ Don&apos;ts
                 </h3>
                 <ul className="space-y-2 text-gray-300">
-                  <li>• Don't stretch or distort the logo</li>
-                  <li>• Don't use off-brand colors</li>
-                  <li>• Don't use light backgrounds</li>
-                  <li>• Don't over-promise or guarantee profits</li>
-                  <li>• Don't use generic crypto imagery</li>
+                  <li>• Don&apos;t stretch or distort the logo</li>
+                  <li>• Don&apos;t use off-brand colors</li>
+                  <li>• Don&apos;t use light backgrounds</li>
+                  <li>• Don&apos;t over-promise or guarantee profits</li>
+                  <li>• Don&apos;t use generic crypto imagery</li>
                 </ul>
               </div>
             </div>

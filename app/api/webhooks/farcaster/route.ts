@@ -44,37 +44,46 @@ export async function POST(request: NextRequest) {
     switch (type) {
       case "app.opened":
         // Track app opens for analytics
-        const sanitizedFidOpen = String(data.fid).replace(/\r|\n/g, "");
-        console.log("App opened by user:", sanitizedFidOpen);
+        const sanitizedFidOpen = String(data.fid)
+          .replace(/[\r\n\t]/g, "")
+          .substring(0, 50);
+        console.log(`App opened by user: ${JSON.stringify(sanitizedFidOpen)}`);
         break;
 
       case "app.closed":
         // Clean up any session data
-        const sanitizedFidClose = String(data.fid).replace(/\r|\n/g, "");
-        console.log("App closed by user:", sanitizedFidClose);
+        const sanitizedFidClose = String(data.fid)
+          .replace(/[\r\n\t]/g, "")
+          .substring(0, 50);
+        console.log(`App closed by user: ${JSON.stringify(sanitizedFidClose)}`);
         break;
 
       case "user.authenticated":
         // Handle user authentication
-        const sanitizedFidAuth = String(data.fid).replace(/\r|\n/g, "");
-        console.log("User authenticated:", sanitizedFidAuth);
+        const sanitizedFidAuth = String(data.fid)
+          .replace(/[\r\n\t]/g, "")
+          .substring(0, 50);
+        console.log(`User authenticated: ${JSON.stringify(sanitizedFidAuth)}`);
         break;
 
       default:
-        // Remove newlines to prevent log injection from event type
-        const sanitizedType =
-          typeof type === "string" ? type.replace(/\r|\n/g, "") : String(type);
-        console.log("Unknown event type:", sanitizedType);
+        // Remove newlines and limit length to prevent log injection from event type
+        const rawType = typeof type === "string" ? type : String(type);
+        const sanitizedType = rawType
+          .replace(/[\r\n\t]/g, "")
+          .substring(0, 100);
+        // Use a fixed prefix to avoid injection
+        console.log(`Unknown event type: ${JSON.stringify(sanitizedType)}`);
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     // Sanitize error message to prevent log injection
-    const sanitizedError =
-      error instanceof Error
-        ? error.message.replace(/\r|\n/g, "")
-        : String(error).replace(/\r|\n/g, "");
-    console.error("Webhook error:", sanitizedError);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const sanitizedError = errorMessage
+      .replace(/[\r\n\t]/g, "")
+      .substring(0, 200);
+    console.error(`Webhook error: ${JSON.stringify(sanitizedError)}`);
     return NextResponse.json(
       { error: "Failed to process webhook" },
       { status: 500 },
