@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { GET as getAllMonitors } from "../all/route";
 
 // Public endpoint that can be called by external services
 // Use with: UptimeRobot, Cron-job.org, or EasyCron (all have free tiers)
@@ -16,23 +17,20 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Use a fixed internal URL to prevent SSRF
-    const internalUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : process.env.NODE_ENV === "production"
-        ? "https://fardrops.xyz"
-        : "http://localhost:3000";
+    // Create a mock request with proper authorization header
+    const mockHeaders = new Headers();
+    mockHeaders.set(
+      "Authorization",
+      `Bearer ${process.env.CRON_SECRET || "development"}`,
+    );
+    mockHeaders.set("Content-Type", "application/json");
 
-    const authHeader = `Bearer ${process.env.CRON_SECRET || "development"}`;
-
-    // Trigger all monitors with validated URL
-    const response = await fetch(`${internalUrl}/api/monitor/all`, {
-      headers: {
-        Authorization: authHeader,
-        "Content-Type": "application/json",
-      },
+    const mockRequest = new NextRequest("http://internal/api/monitor/all", {
+      headers: mockHeaders,
     });
 
+    // Call the monitor function directly - no external fetch, no SSRF risk
+    const response = await getAllMonitors(mockRequest);
     const data = await response.json();
 
     return NextResponse.json({

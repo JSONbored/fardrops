@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import { GET as getClankerMonitor } from "../clanker/route";
+import { GET as getDegenMonitor } from "../degen/route";
+import { GET as getPowerBadgeMonitor } from "../power-badge/route";
+import { GET as getGeneralMonitor } from "../route";
 
 // Import all monitor functions
 const monitors = [
-  { name: "Clanker", endpoint: "/api/monitor/clanker" },
-  { name: "DEGEN", endpoint: "/api/monitor/degen" },
-  { name: "Power Badge", endpoint: "/api/monitor/power-badge" },
-  { name: "General", endpoint: "/api/monitor" },
+  { name: "Clanker", handler: getClankerMonitor },
+  { name: "DEGEN", handler: getDegenMonitor },
+  { name: "Power Badge", handler: getPowerBadgeMonitor },
+  { name: "General", handler: getGeneralMonitor },
 ];
 
 interface MonitorResult {
@@ -29,25 +33,23 @@ export async function GET(request: NextRequest) {
 
     const results: MonitorResult[] = [];
 
-    // Use a fixed internal URL to prevent SSRF
-    const internalUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : process.env.NODE_ENV === "production"
-        ? "https://fardrops.xyz"
-        : "http://localhost:3000";
-
-    // Run all monitors in parallel
+    // Run all monitors in parallel - calling functions directly, no fetch needed
     const monitorPromises = monitors.map(
       async (monitor): Promise<MonitorResult> => {
         try {
           console.log(`Running ${monitor.name} monitor...`);
 
-          const response = await fetch(`${internalUrl}${monitor.endpoint}`, {
-            headers: {
-              Authorization: authHeader || "",
-              "Content-Type": "application/json",
-            },
+          // Create a mock request for the monitor function
+          const mockHeaders = new Headers();
+          mockHeaders.set("Authorization", authHeader || "");
+          mockHeaders.set("Content-Type", "application/json");
+
+          const mockRequest = new NextRequest("http://internal", {
+            headers: mockHeaders,
           });
+
+          // Call the monitor function directly - no external fetch, no SSRF risk
+          const response = await monitor.handler(mockRequest);
 
           if (response.ok) {
             const data = await response.json();
