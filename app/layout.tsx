@@ -1,28 +1,29 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import Script from 'next/script'
-import { Analytics } from '@vercel/analytics/next'
-import './globals.css'
-import { Providers } from './providers'
-import { MiniAppProvider } from '@/components/MiniAppProvider'
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
+import "./globals.css";
+import { Providers } from "./providers";
+import { MiniAppProvider } from "@/components/MiniAppProvider";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'FarDrops - Never Miss a Farcaster Airdrop',
-  description: 'The first dedicated airdrop tracker for the Farcaster ecosystem. Track DEGEN, frame tokens, NFT drops and more.',
-  metadataBase: new URL('https://fardrops.xyz'),
+  title: "FarDrops - Never Miss a Farcaster Airdrop",
+  description:
+    "The first dedicated airdrop tracker for the Farcaster ecosystem. Track DEGEN, frame tokens, NFT drops and more.",
+  metadataBase: new URL("https://fardrops.xyz"),
   openGraph: {
-    title: 'FarDrops - Farcaster Airdrop Tracker',
-    description: 'Never miss another Farcaster airdrop',
-    images: ['/og-image.png'],
+    title: "FarDrops - Farcaster Airdrop Tracker",
+    description: "Never miss another Farcaster airdrop",
+    images: ["/og-image.png"],
   },
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -68,12 +69,10 @@ export default function RootLayout({
           }}
         />
         <Providers>
-          <MiniAppProvider>
-            {children}
-          </MiniAppProvider>
+          <MiniAppProvider>{children}</MiniAppProvider>
         </Providers>
         <Analytics />
       </body>
     </html>
-  )
+  );
 }

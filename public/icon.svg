@@ -1,6 +1,11 @@
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="512" height="512" rx="128" fill="#8B5CF6"/>
-  <path d="M256 128L320 256H192L256 128Z" fill="white"/>
-  <path d="M192 288H320V384H192V288Z" fill="white" opacity="0.8"/>
-  <circle cx="256" cy="336" r="24" fill="#8B5CF6"/>
+  <!-- Pure Black Background -->
+  <rect width="512" height="512" rx="112" fill="#000000"/>
+  
+  <!-- The Drop - Minimalist geometric design -->
+  <!-- Inverted triangle (like Vercel but pointing down for "drop") -->
+  <path d="M256 380 L356 180 L156 180 Z" fill="white"/>
+  
+  <!-- The Catch - Simple line suggesting a container -->
+  <path d="M156 400 L356 400" stroke="white" stroke-width="20" stroke-linecap="round"/>
 </svg>

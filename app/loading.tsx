@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion";
 
 export default function Loading() {
   return (
@@ -22,5 +22,5 @@ export default function Loading() {
         <p className="mt-4 text-gray-400">Loading FarDrops...</p>
       </div>
     </div>
-  )
+  );
 }

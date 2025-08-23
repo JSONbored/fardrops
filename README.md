@@ -1,276 +1,147 @@
 # 🎁 FarDrops
 
-<div align="center">
-  
-  ![FarDrops Banner](https://img.shields.io/badge/🚀_FarDrops-Farcaster_Airdrop_Tracker-8B5CF6?style=for-the-badge&labelColor=1a1a2e)
-  
-  <p align="center">
-    <strong>Never miss another Farcaster airdrop again.</strong>
-  </p>
-  
-  <p align="center">
-    The first dedicated airdrop tracker built specifically for the Farcaster ecosystem.
-    <br />
-    Track DEGEN, Clanker tokens, NFT drops, and more—all in one place.
-  </p>
+> The first dedicated airdrop tracker built specifically for the Farcaster ecosystem.
 
-  <p align="center">
-    <a href="https://fardrops.xyz">
-      <img src="https://img.shields.io/badge/Website-fardrops.xyz-blue?style=flat-square" alt="Website" />
-    </a>
-    <a href="https://warpcast.com/fardrops">
-      <img src="https://img.shields.io/badge/Farcaster-@fardrops-purple?style=flat-square" alt="Farcaster" />
-    </a>
-    <a href="#-built-on-base">
-      <img src="https://img.shields.io/badge/Built_on-Base-0052FF?style=flat-square" alt="Base" />
-    </a>
-    <a href="https://github.com/JSONbored/fardrops/blob/main/LICENSE">
-      <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License" />
-    </a>
-  </p>
+![Build Status](https://img.shields.io/github/actions/workflow/status/JSONbored/fardrops/main.yml?branch=main&style=flat-square)
+![License](https://img.shields.io/github/license/JSONbored/fardrops?style=flat-square)
+![TypeScript](https://img.shields.io/badge/TypeScript-100%25-blue?style=flat-square)
 
-  <p align="center">
-    <a href="#-key-features">Features</a> •
-    <a href="#-quick-start">Quick Start</a> •
-    <a href="#-tech-stack">Tech Stack</a> •
-    <a href="#-roadmap">Roadmap</a> •
-    <a href="#-contributing">Contributing</a>
-  </p>
-</div>
+## Overview
 
----
+FarDrops automatically monitors the Farcaster network for airdrop announcements, tracks eligibility, and sends instant notifications when you qualify. Never miss another DEGEN drop, Clanker token, or NFT mint again.
 
-## 🌟 Why FarDrops?
+### Key Features
 
-The Farcaster ecosystem is exploding with opportunities—new tokens launching daily through Clanker, exclusive NFT drops for Power Badge holders, and community airdrops happening across channels. **But keeping track of it all? Nearly impossible.**
+- **🔍 Automated Detection** - Real-time monitoring of Farcaster channels and casts
+- **📱 Farcaster Native** - Built as a Mini App for seamless integration
+- **🔔 Instant Alerts** - Multi-channel notifications (Farcaster, Discord, Telegram)
+- **💎 Eligibility Checking** - Automatic wallet and FID verification
+- **⚡ Built on Base** - Lightning-fast transactions with minimal fees
 
-FarDrops solves this by automatically monitoring the entire Farcaster network, detecting airdrops in real-time, and notifying you instantly when you're eligible.
-
-<div align="center">
-  <img src="https://img.shields.io/badge/250%2B-Clanker_Tokens_Daily-FF6B6B?style=for-the-badge" alt="Clanker Tokens" />
-  <img src="https://img.shields.io/badge/15%2B-Major_Tokens-4ECDC4?style=for-the-badge" alt="Major Tokens" />
-  <img src="https://img.shields.io/badge/100%2B-Active_Channels-95E1D3?style=for-the-badge" alt="Active Channels" />
-</div>
-
-## ✨ Key Features
-
-### 🔍 **Automated Detection**
-- Real-time monitoring of Farcaster channels and casts
-- Smart contract event tracking on Base
-- Frame metadata analysis for interactive airdrops
-- Clanker bot monitoring (250+ new tokens daily)
-
-### 📱 **Farcaster Native**
-- Built as a Farcaster Mini App—use it directly in your feed
-- One-click wallet connection with Farcaster auth
-- Power Badge holder exclusive tracking
-- Social proof from your network
-
-### 🔔 **Instant Notifications**
-- In-app alerts through Farcaster
-- Discord webhook integration
-- Telegram bot notifications
-- Email alerts (optional)
-
-### 💎 **Eligibility Checking**
-- Automatic wallet eligibility verification
-- FID-based qualification tracking
-- Historical activity analysis
-- Channel membership verification
-
-### 🚀 **Built on Base**
-- Lightning-fast transactions on Base L2
-- Gas-optimized claiming
-- Direct integration with Base ecosystem
-- Support for USDC, ETH, and Base tokens
-
-## 🛠 Tech Stack
-
-<div align="center">
-  <img src="https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
-  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Base-0052FF?style=for-the-badge&logo=ethereum&logoColor=white" alt="Base" />
-  <img src="https://img.shields.io/badge/Farcaster-8B5CF6?style=for-the-badge&logo=farcaster&logoColor=white" alt="Farcaster" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
-</div>
-
-### Core Technologies
-- **Frontend**: Next.js 15 (App Router), React 19, TypeScript
-- **Styling**: Tailwind CSS v4, Framer Motion
-- **Blockchain**: Base L2, Wagmi, Viem, OnchainKit
-- **Farcaster**: Mini App SDK, Farcaster Auth Kit
-- **Database**: Supabase (PostgreSQL)
-- **Notifications**: Resend, Discord/Telegram webhooks
-
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
+
 - Node.js 18+ and npm
-- A [Supabase](https://supabase.com) account (free tier works)
+- [Supabase](https://supabase.com) account (free tier works)
 - [Farcaster](https://warpcast.com) account
 
 ### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/JSONbored/fardrops.git
-   cd fardrops
-   ```
+```bash
+# Clone the repository
+git clone https://github.com/JSONbored/fardrops.git
+cd fardrops
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+# Install dependencies
+npm install
 
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env.local
-   ```
-   
-   Configure your `.env.local` with:
-   - Supabase credentials
-   - OnchainKit API key (from [Coinbase Developer Platform](https://portal.cdp.coinbase.com))
-   - Optional: Notification service credentials
+# Configure environment variables
+cp .env.example .env.local
 
-4. **Set up the database**
-   
-   Run the schema in your Supabase project:
-   ```bash
-   # Copy contents of supabase/schema.sql to Supabase SQL editor
-   ```
+# Start development server
+npm run dev
+```
 
-5. **Start the development server**
-   ```bash
-   npm run dev
-   ```
+Visit [http://localhost:3000](http://localhost:3000) to see the app.
 
-   Open [http://localhost:3000](http://localhost:3000) to see the app.
+### Environment Variables
 
-## 📦 Project Structure
+```env
+# Required
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_KEY=your_service_key
+
+# Optional
+NEXT_PUBLIC_ONCHAINKIT_API_KEY=your_onchainkit_key
+RESEND_API_KEY=your_resend_key
+TELEGRAM_BOT_TOKEN=your_bot_token
+```
+
+## Tech Stack
+
+- **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS
+- **Blockchain**: Base L2, Wagmi, Viem, OnchainKit
+- **Farcaster**: Mini App SDK, Auth Kit
+- **Database**: Supabase (PostgreSQL)
+- **Infrastructure**: Vercel, GitHub Actions
+
+## Project Structure
 
 ```
 fardrops/
 ├── app/                    # Next.js App Router
 │   ├── api/               # API endpoints
-│   │   ├── airdrops/      # Airdrop CRUD operations
-│   │   ├── alerts/        # User notification preferences
-│   │   └── monitor/       # Automated monitoring endpoint
-│   ├── layout.tsx         # Root layout with providers
+│   ├── layout.tsx         # Root layout
 │   └── page.tsx           # Landing page
 ├── components/            # React components
-│   ├── AnimatedDashboard.tsx
-│   └── MiniAppProvider.tsx
 ├── lib/                   # Utilities & helpers
-│   ├── farcaster.ts      # Farcaster Hub API client
-│   ├── supabase.ts       # Database client
-│   └── utils.ts          # Helper functions
 ├── public/
 │   └── .well-known/
 │       └── farcaster.json # Mini App manifest
-└── supabase/
-    └── schema.sql        # Database schema
+└── supabase/              # Database schema
 ```
 
-## 🗺 Roadmap
+## Development
 
-### Phase 1: Foundation (Current)
-- [x] Core airdrop detection engine
-- [x] Farcaster Mini App integration
-- [x] Real-time notifications
-- [x] Power Badge holder features
-- [ ] Public beta launch
+```bash
+# Run development server
+npm run dev
 
-### Phase 2: Intelligence Layer
-- [ ] AI-powered eligibility prediction
-- [ ] Airdrop value estimation
-- [ ] Automated claiming (where possible)
-- [ ] Portfolio tracking dashboard
+# Build for production
+npm run build
 
-### Phase 3: Social Features
-- [ ] Share eligible airdrops with friends
-- [ ] Community-submitted airdrops
-- [ ] Referral rewards program
-- [ ] Channel-specific tracking
+# Run tests
+npm test
 
-### Phase 4: Multi-chain
-- [ ] Ethereum mainnet support
-- [ ] Optimism integration
-- [ ] Arbitrum tracking
-- [ ] Cross-chain portfolio view
+# Lint code
+npm run lint
 
-## 🤝 Contributing
+# Format code
+npm run format
+```
 
-We love contributions! FarDrops is built by the Farcaster community, for the Farcaster community.
+## Deployment
 
-### How to Contribute
+The app is configured for automatic deployment via Vercel:
 
-1. **Fork the repository**
-2. **Create your feature branch**
-   ```bash
-   git checkout -b feature/AmazingFeature
-   ```
-3. **Commit your changes**
-   ```bash
-   git commit -m 'Add some AmazingFeature'
-   ```
-4. **Push to the branch**
-   ```bash
-   git push origin feature/AmazingFeature
-   ```
-5. **Open a Pull Request**
+1. Push to `main` branch triggers production deployment
+2. Pull requests create preview deployments
+3. GitHub Actions handle CI/CD and monitoring
 
-### Development Guidelines
-- Write clean, documented code
-- Follow the existing code style
-- Add tests for new features
-- Update documentation as needed
+## Contributing
 
-### Good First Issues
-Check out our [good first issues](https://github.com/JSONbored/fardrops/labels/good%20first%20issue) for ways to get started!
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 🏗 Base Summer League
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-FarDrops is proudly participating in the [Base Summer League Builder Rewards](https://mirror.xyz/symphonyfinance.eth/jGyn6qyG78kVPfE3Ur58jLX1huGhMCQmybdaGwmKu7I) program. We're building on Base to provide the best possible experience for Farcaster users.
+## Base Summer League
 
-<div align="center">
-  <img src="https://img.shields.io/badge/Base_Summer_League-Participant-0052FF?style=for-the-badge" alt="Base Summer League" />
-</div>
+FarDrops is participating in the [Base Summer League Builder Rewards](https://base.mirror.xyz/S8mQ_fOh-7DhvgHXlR7v01HRRLqAKVxKdxEEUkYxhyY) program, building on Base to provide the best possible experience for Farcaster users.
 
-## 📄 License
+## About
+
+Built by [JSONbored](https://github.com/JSONbored)
+
+- **Farcaster**: [@JSONbored](https://warpcast.com/jsonbored) | [@FarDrops](https://warpcast.com/fardrops)
+- **Website**: [fardrops.xyz](https://fardrops.xyz)
+
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Support
 
-- [Farcaster](https://farcaster.xyz) for creating an amazing decentralized social protocol
-- [Base](https://base.org) for providing a fast, affordable L2
-- [OnchainKit](https://onchainkit.xyz) for seamless wallet integration
-- [Clanker](https://clanker.world) for revolutionizing token creation
-- The entire Farcaster community for the constant innovation
+Need help? Found a bug? Have a feature request?
 
-## 📞 Support & Community
-
-<div align="center">
-  
-  **Need help? Found a bug? Have a feature request?**
-  
-  <a href="https://warpcast.com/fardrops">
-    <img src="https://img.shields.io/badge/Farcaster-Chat_with_us-8B5CF6?style=for-the-badge" alt="Farcaster" />
-  </a>
-  
-  <a href="https://github.com/JSONbored/fardrops/issues">
-    <img src="https://img.shields.io/badge/GitHub-Open_Issue-181717?style=for-the-badge&logo=github" alt="GitHub Issues" />
-  </a>
-  
-</div>
+- Open an [issue on GitHub](https://github.com/JSONbored/fardrops/issues)
+- Message us on [Farcaster](https://warpcast.com/fardrops)
 
 ---
 
-<div align="center">
-  <p>
-    <strong>Built with 💜 by the Farcaster community</strong>
-  </p>
-  <p>
-    <sub>Star ⭐ this repo if you find it useful!</sub>
-  </p>
-</div>
+⭐ Star this repo if you find it useful!
