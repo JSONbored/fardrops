@@ -145,3 +145,5 @@ Need help? Found a bug? Have a feature request?
 ---
 
 ⭐ Star this repo if you find it useful!
+
+![Alt](https://repobeats.axiom.co/api/embed/3ff223cf019cbaa7406182b250389bca62201a95.svg "Repobeats analytics image")
