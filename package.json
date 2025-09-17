@@ -18,7 +18,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@coinbase/onchainkit": "^0.38.19",
+    "@coinbase/onchainkit": "^1.0.0",
     "@farcaster/auth-kit": "^0.8.1",
     "@farcaster/frame-wagmi-connector": "^1.0.0",
     "@farcaster/hub-nodejs": "^0.15.6",
@@ -51,7 +51,7 @@
     "tailwind-variants": "^3.1.1",
     "tailwindcss": "^4.1.12",
     "typescript": "^5.9.2",
-    "viem": "^2.37.5",
+    "viem": "^2.37.6",
     "wagmi": "^2.16.9"
   },
   "devDependencies": {
